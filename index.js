@@ -7,6 +7,17 @@ const path = require("path");
 const express = require("express");
 const user_route = require("./routes/userRoute");
 const app = express();
+const session=require("express-session")
+const nocache=require('nocache')
+
+
+app.use(nocache())
+
+app.use(session( {
+  secret:"yyy",
+  resaved:true,
+  saveUninitialized:true
+} ))
 
 app.set("view engine", "ejs");
 app.use(express.json());

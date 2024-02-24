@@ -24,7 +24,14 @@ const userSchema = new mongoose.Schema({
     is_verified:{
         type:Number,
         default:0
+    },
+    is_blocked:{
+        type:Boolean,
+        required:true,
+        default:false
     }
 })
+
+
 
 module.exports=mongoose.model('users',userSchema)

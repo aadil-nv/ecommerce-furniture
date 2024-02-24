@@ -66,12 +66,22 @@
 
                     <div class="header-right">
                         <div class="account">
-                            <a href="/login/" title="My account">
-                                <div class="icon">
-                                    <i class="icon-user"></i>
-                                </div>
-                                <p>Account</p>
-                            </a>
+                            <%if(locals.User){%>
+                                <a href="/userprofile" title="My account">
+                                    <div class="icon">
+                                        <i class="icon-user"></i> 
+                                    </div>
+                                    <p>Account</p>
+                                </a>
+                                <%}else{%>
+                                    <a href="/login" title="My account">
+                                        <div class="icon">
+                                            <i class="icon-user"></i> 
+                                        </div>
+                                        <p>Account</p>
+                                    </a>
+                                    <%}%>
+                           
                         </div><!-- End .compare-dropdown -->
 
                         <div class="wishlist">

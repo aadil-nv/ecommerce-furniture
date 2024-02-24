@@ -70,8 +70,16 @@
     <div class="limiter">
       <div class="container-login100">
         <div class="wrap-login100">
-          <form class="login100-form validate-form" action="" method="post">
+          <form class="login100-form validate-form" action=""  onsubmit="handleSubmit()"  method="post">
             <span class="login100-form-title p-b-43"> Sign-Up </span>
+
+            
+            <% if(typeof message !=='undefined' ){ %>
+              <p style="color: red;">
+                  <%= message %>
+              </p>
+
+              <% } %>
 
             <div
               class="wrap-input100 validate-input"
@@ -170,5 +178,40 @@
     <script src="vendor/countdowntime/countdowntime.js"></script>
     <!--===============================================================================================-->
     <script src="js/main.js"></script>
+
+    <script>
+       let show=document.getElementById("show1");
+
+function handleSubmit(){
+    let username=document.getElementById("uname").value;
+    let email=document.getElementById("email").value;
+    let password1=document.getElementsByName("p1").value;
+    let password2=document.getElementsByName("p2").value;
+    if(username.trim()==""){
+        document.getElementById("show1").innerHTML="Username can't be empty";
+      return false;
+    }
+   let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email.match(emailRegex)) {
+      document.getElementById("show2").innerHTML = "Please enter a valid email address";
+      return false;
+    }
+    if(password1.trim()=""){
+      document.getElementById("show3").innerHTML="Passwords can't be empty";
+      return false;
+    }
+    if(password2.trim()=""){
+      document.getElementById("show4").innerHTML="Passwords can't be empty";
+      return false;
+    }
+    if(password1!=password2){
+      document.getElementById("show4").innerHTML="Passwords doesn't match";
+      return false;
+    }
+
+
+  }
+
+    </script>
   </body>
 </html>
