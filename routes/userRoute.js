@@ -10,7 +10,8 @@ user_route.use(bodyParser.urlencoded({ extended: true }));
 
 user_route.get("/registration",usercontroller.loadRegister);
 user_route.post("/registration", usercontroller.insertUser);
-user_route.post('/login',usercontroller.otpLogin)
+user_route.post('/otp',usercontroller.otpLogin)
+user_route.post('/resendotp',usercontroller.resendOtp)
 
 user_route.post("/login", usercontroller.userLogin);
 

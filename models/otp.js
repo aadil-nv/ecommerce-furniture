@@ -5,13 +5,13 @@ const otpSchema=new mongoose.Schema({
     email:{
         type:String,
         required:true
-    },
+    }, 
     otp:{
-        type:String,
+        type:Number,
         required:true
     },
     createdAt:{type:Date,
-        expires:'2m',
+        expires:'60s',
         default:Date.now}
 })
 

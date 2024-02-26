@@ -15,7 +15,7 @@ app.use(nocache())
 
 app.use(session( {
   secret:"yyy",
-  resaved:true,
+  resave:true,
   saveUninitialized:true
 } ))
 

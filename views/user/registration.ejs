@@ -70,9 +70,9 @@
     <div class="limiter">
       <div class="container-login100">
         <div class="wrap-login100">
-          <form class="login100-form validate-form" action=""  onsubmit="handleSubmit()"  method="post">
+          <form class="login100-form validate-form" action=""  onsubmit="return handleSubmit()"  method="post">
             <span class="login100-form-title p-b-43"> Sign-Up </span>
-
+              <p id="show1"></p>
             
             <% if(typeof message !=='undefined' ){ %>
               <p style="color: red;">
@@ -83,48 +83,48 @@
 
             <div
               class="wrap-input100 validate-input"
-              data-validate="Valid email is required: ex@abc.xyz"
             >
               <input
                 class="input100"
                 type="text"
                 name="name"
+                id="name"
                 placeholder="Enter your Name"
               />
             </div>
 
             <div
               class="wrap-input100 validate-input"
-              data-validate="Valid email is required: ex@abc.xyz"
             >
               <input
                 class="input100"
                 type="text"
                 name="email"
+                id="email"
                 placeholder="Enter you email"
               />
             </div>
 
             <div
               class="wrap-input100 validate-input"
-              data-validate="Valid email is required: ex@abc.xyz"
             >
               <input
                 class="input100"
                 type="number"
                 name="mno"
+                id="mno"
                 placeholder="Enter your MobleNo"
               />
             </div>
 
             <div
               class="wrap-input100 validate-input"
-              data-validate="Password is required"
             >
               <input
                 class="input100"
                 type="password"
                 name="password"
+                id="password"
                 placeholder="Enter new Password"
               />
             </div>
@@ -183,33 +183,32 @@
        let show=document.getElementById("show1");
 
 function handleSubmit(){
-    let username=document.getElementById("uname").value;
+    let username=document.getElementById("name").value;
     let email=document.getElementById("email").value;
-    let password1=document.getElementsByName("p1").value;
-    let password2=document.getElementsByName("p2").value;
+    let mobile=document.getElementById("mno").value;
+    let password=document.getElementById("password").value;
     if(username.trim()==""){
         document.getElementById("show1").innerHTML="Username can't be empty";
       return false;
     }
    let emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.match(emailRegex)) {
-      document.getElementById("show2").innerHTML = "Please enter a valid email address";
+      document.getElementById("show1").innerHTML = "Please enter a valid email address";
       return false;
     }
-    if(password1.trim()=""){
-      document.getElementById("show3").innerHTML="Passwords can't be empty";
+    let mobileRegex=/^\d{10}$/
+    if(!mobile.match(mobileRegex)){
+      document.getElementById("show1").innerHTML="mobile can't be empty";
       return false;
     }
-    if(password2.trim()=""){
-      document.getElementById("show4").innerHTML="Passwords can't be empty";
+    let passwordeRegex=/^\d{5}$/
+    if(!password.match(passwordeRegex)){
+      document.getElementById("show1").innerHTML="Passwords can't be empty";
       return false;
     }
-    if(password1!=password2){
-      document.getElementById("show4").innerHTML="Passwords doesn't match";
-      return false;
-    }
+    
 
-
+return true
   }
 
     </script>

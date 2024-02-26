@@ -1,15 +1,16 @@
 const User = require("../models/userModel");
-const Otp= require('../models/otp')
+const Otp = require('../models/otp')
 const bcrypt = require("bcrypt");
 const session = require("express-session")
 const nodemailer = require('nodemailer')
-const path = require('path')
+const path = require('path');
+const { log } = require("console");
 
 const generateOTP = () => {
   return Math.floor(1000 + Math.random() * 9000);
 }
 
-
+let userData
 
 const securedPassword = async (password) => {
   try {
@@ -19,6 +20,7 @@ const securedPassword = async (password) => {
     console.log(erorr.message);
   }
 };
+
 
 const loadRegister = async (req, res) => {
   try {
@@ -33,56 +35,59 @@ const insertUser = async (req, res) => {
   try {
     const checkemail = await User.findOne({ email: req.body.email })
     if (checkemail) {
-      res.render('user/registration', { message: "Email already exist" })
+      return res.render('user/registration', { message: "Email already exist" })
 
-    } else {
-      const spassword = await securedPassword(req.body.password)
-      const email = req.body.email
-      const emailRegex = /^[A-Za-z0-9.%+-]+@gmail\.com$/
-      if (!emailRegex.test(email)) {
-        res.render('user/registration', { message: 'Invalid email provided' });
-      }
-      const name = req.body.name
-
-      if (!name || !/^[a-zA-Z][a-zA-Z\s]*$/.test(name)) {
-        res.render('user/registration', { message: "Inavlid name provided" })
-      }
-
-      const user = new User({
-        name: req.body.name,
-        email: req.body.email,
-        mobile: req.body.mno,
-        password: spassword,
-        is_admin: 0,
-
-      })
-
-      const userData = user
-
-      if (userData) {
-        res.render("user/otp", { message: "Succesfilly Registerd Your Form . Please Verify Your Mail", });
-        
-        
-        const otp = generateOTP()
-
-        const userotp= new Otp ({
-          otp:otp,
-          email:req.body.email
-        })
-        const userOTP=await  userotp.save()
-
-        verifyEmail(name, email, otp)
-
-      } else {
-        res.render("registration", {
-          message: "Your Registration has been Failed ",
-        });
-      }
     }
+    const spassword = await securedPassword(req.body.password)
+
+    const email = req.body.email
+    const emailRegex = /^[A-Za-z0-9.%+-]+@gmail\.com$/
+    if (!emailRegex.test(email)) {
+      res.render('user/registration', { message: 'Invalid email provided' });
+    }
+    const name = req.body.name
+
+    if (!name || !/^[a-zA-Z][a-zA-Z\s]*$/.test(name)) {
+      res.render('user/registration', { message: "Inavlid name provided" })
+    }
+
+
+    const user = new User({
+      name: req.body.name,
+      email: req.body.email,
+      mobile: req.body.mno,
+      password: spassword,
+      is_admin: 0,
+
+    })
+
+    userData = user
+
+
+    if (userData) {
+
+      const otp = generateOTP()
+
+      const userotp = new Otp({
+        otp: otp,
+        email: req.body.email
+      })
+      await userotp.save()
+
+
+      verifyEmail(name, email, otp)
+
+      return res.render("user/otp");
+    } else {
+      res.render("registration", {
+        message: "Your Registration has been Failed ",
+      });
+    }
+
   } catch (erorr) {
     console.log(erorr.message);
   }
-};
+}
 
 
 
@@ -121,29 +126,35 @@ const verifyEmail = async (name, email, otp) => {
   }
 }
 
-const otpLogin= async (req,res)=>{
+
+
+
+const otpLogin = async (req, res) => {
   try {
-    const storedEmail=await Otp.findOne({otps:req.body.otp})
-    
-    console.log(storedEmail)
-    const storedOtp=storedEmail.otp
+    const storedEmail = await Otp.findOne({ Otps: req.body.otp })
+    const storedOtp = storedEmail.otp
+    const userOtp = req.body.n1
 
-    const userOtp= [req.body.n1,req.body.n2,req.body.n3,req.body.n4 ]
-    const checkOtp=userOtp.join('')
 
-    console.log(storedOtp);
-    console.log(checkOtp);
-    
-    if(storedOtp===checkOtp){
-      res.render('user/index')
-    }else{
-      res.render('user/registration')
+    if (storedOtp == userOtp) {
+      await userData.save()
+      await User.findOneAndUpdate({ email: userData.email }, { is_verified: true })
+      return res.render('user/login')
+
+
+
+    } else {
+      
+      
+      return res.render("user/otp", { message: "wrong Otp" });
+
     }
 
   } catch (error) {
     console.log(error.message)
   }
 }
+
 
 
 
@@ -156,15 +167,14 @@ const loadLogin = async (req, res) => {
 };
 
 
-
 const userLogin = async (req, res) => {
   try {
     const userData = await User.findOne({ email: req.body.email });
 
-
     if (userData) {
       const passwordMatch = await bcrypt.compare(req.body.password, userData.password);
 
+      
       if (passwordMatch) {
         req.session.user = userData._id;
         res.render("user/index", { User: req.session.user });
@@ -194,6 +204,24 @@ const loadUserProfile = async (req, res) => {
 
 }
 
+const resendOtp = async (req, res) => {
+  try {
+    const newotp = generateOTP()
+
+    
+      verifyEmail(userData.name ,userData.email, newotp)
+      await  Otp.updateOne({email:userData.email},{otp:newotp})
+      
+      res.render('user/otp')
+     
+
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+
+
 
 module.exports = {
   loadRegister,
@@ -202,5 +230,6 @@ module.exports = {
   otpLogin,
   loadLogin,
   userLogin,
-  loadUserProfile
+  loadUserProfile,
+  resendOtp
 };

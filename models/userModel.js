@@ -1,20 +1,20 @@
 const mongoose=require('mongoose')
 const userSchema = new mongoose.Schema({
     name:{
-        type:String,
-        required:true
+        type:String
+        
     },
     email:{
-        type:String,
-        required:true
+        type:String
+    
     },
     mobile:{
-        type:Number,
-        required:true
+        type:Number
+    
     },
     password:{
-        type :String,
-        required:true
+        type :String
+        
 
     },
     is_admin:{
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
     },
     is_verified:{
         type:Number,
-        default:0
+        default:false
     },
     is_blocked:{
         type:Boolean,

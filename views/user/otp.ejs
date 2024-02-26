@@ -18,7 +18,7 @@
 		<div class="container">
 			<div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 col-xl-6 offset-xl-3 text-center">
 				<
-				<form action="/login" method="post" class="rounded bg-white shadow p-5"  >
+				<form action="/otp" method="post" class="rounded bg-white shadow p-5"  >
 					<h3 class="text-dark fw-bolder fs-4 mb-2">Two Step Verification</h3>
 
 					<div class="fw-normal text-muted mb-4">
@@ -46,27 +46,50 @@
                         </svg>
                         <span>8459</span>
                     </div>
+                    <% if(typeof message!=='undefined' ){ %>
+
+                        <h6 style="color: red;">
+                            <%= message %>
+                        </h6>
+                        <% } %>
+
+
+
 
 					<div class="otp_input text-start mb-2">
                         <label for="digit">Type your 6 digit security code</label>
 						<div class="d-flex align-items-center justify-content-between mt-2">
-                            <input type="text" name="n1" class="form-control" placeholder="0">
-                            <input type="text" name="n2" class="form-control" placeholder="0">
-                            <input type="text" name="n3" class="form-control" placeholder="0">
-                            <input type="text" name="n4" class="form-control" placeholder="0">    
+                            <input type="number" name="n1" class="form-control">
                         </div> 
 					</div>  
 
 					<button type="submit" class="btn btn-primary submit_btn my-4">Submit</button> 
 
-                    <div class="fw-normal text-muted mb-2">
-						Didn’t get the code ? <a href="#" class="text-primary fw-bold text-decoration-none">Resend</a>
-					</div>
 				</form>
+                <form action="/resendotp" method="post">
+                    <div class="fw-normal text-muted mb-2">
+                        Didn’t get the code ?<button class="btn-success" type="submit"  id="resend">Resend OTP</button >
+                            <span class="time"></span>
+                    </div>
+                </form>
 			</div>
 		</div>
 	</section>
 </body>
+<script>
+    function timer(n){
+        document.getElementById('resend').disabled= true
+        const interval = setInterval(()=>{
+            if(n==-0){
+                clearInterval(interval)
+                document.getElementById("resend").disabled=false
+            }
+            document.querySelector(".time").innerHTML=n
+            n=n-1
+        },1000)
+    }
+    timer(10)
+</script>
 </html>
 
 
