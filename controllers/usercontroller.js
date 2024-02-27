@@ -1,16 +1,16 @@
 const User = require("../models/userModel");
-const Otp = require('../models/otp')
+const Otp = require("../models/otp");
 const bcrypt = require("bcrypt");
-const session = require("express-session")
-const nodemailer = require('nodemailer')
-const path = require('path');
+const session = require("express-session");
+const nodemailer = require("nodemailer");
+const path = require("path");
 const { log } = require("console");
 
 const generateOTP = () => {
   return Math.floor(1000 + Math.random() * 9000);
-}
+};
 
-let userData
+let userData;
 
 const securedPassword = async (password) => {
   try {
@@ -21,7 +21,6 @@ const securedPassword = async (password) => {
   }
 };
 
-
 const loadRegister = async (req, res) => {
   try {
     res.render("user/registration");
@@ -30,27 +29,26 @@ const loadRegister = async (req, res) => {
   }
 };
 
-
 const insertUser = async (req, res) => {
   try {
-    const checkemail = await User.findOne({ email: req.body.email })
+    const checkemail = await User.findOne({ email: req.body.email });
     if (checkemail) {
-      return res.render('user/registration', { message: "Email already exist" })
-
+      return res.render("user/registration", {
+        message: "Email already exist",
+      });
     }
-    const spassword = await securedPassword(req.body.password)
+    const spassword = await securedPassword(req.body.password);
 
-    const email = req.body.email
-    const emailRegex = /^[A-Za-z0-9.%+-]+@gmail\.com$/
+    const email = req.body.email;
+    const emailRegex = /^[A-Za-z0-9.%+-]+@gmail\.com$/;
     if (!emailRegex.test(email)) {
-      res.render('user/registration', { message: 'Invalid email provided' });
+      res.render("user/registration", { message: "Invalid email provided" });
     }
-    const name = req.body.name
+    const name = req.body.name;
 
     if (!name || !/^[a-zA-Z][a-zA-Z\s]*$/.test(name)) {
-      res.render('user/registration', { message: "Inavlid name provided" })
+      res.render("user/registration", { message: "Inavlid name provided" });
     }
-
 
     const user = new User({
       name: req.body.name,
@@ -58,24 +56,20 @@ const insertUser = async (req, res) => {
       mobile: req.body.mno,
       password: spassword,
       is_admin: 0,
+    });
 
-    })
-
-    userData = user
-
+    userData = user;
 
     if (userData) {
-
-      const otp = generateOTP()
+      const otp = generateOTP();
 
       const userotp = new Otp({
         otp: otp,
-        email: req.body.email
-      })
-      await userotp.save()
+        email: req.body.email,
+      });
+      await userotp.save();
 
-
-      verifyEmail(name, email, otp)
+      verifyEmail(name, email, otp);
 
       return res.render("user/otp");
     } else {
@@ -83,80 +77,60 @@ const insertUser = async (req, res) => {
         message: "Your Registration has been Failed ",
       });
     }
-
   } catch (erorr) {
     console.log(erorr.message);
   }
-}
-
-
-
-
-
-
+};
 
 const verifyEmail = async (name, email, otp) => {
   try {
-
     const transport = nodemailer.createTransport({
       service: "gmail",
 
       auth: {
         user: "adilev2000@gmail.com",
         pass: "zufu zbyh zeac zptj",
-      }
+      },
     });
     const mailoption = {
       from: "adilev2000@gmail.com",
       to: email,
-      subject: 'for verification mail',
-      html: `<h1>hi ${name} this is OTP form Ecommerce-Furniture <a>${otp}</a></h1>`
-    }
+      subject: "for verification mail",
+      html: `<h1>hi ${name} this is OTP form Ecommerce-Furniture <a>${otp}</a></h1>`,
+    };
     transport.sendMail(mailoption, (err, info) => {
       if (err) {
         console.log(err.message);
-      }
-      else {
+      } else {
         console.log(`Email has been sent: ${info.messageId}`);
         console.log(`Preview URL: ${nodemailer.getTestMessageUrl(info)}`);
       }
-    })
+    });
   } catch (error) {
     console.log(error.message);
   }
-}
-
-
-
+};
 
 const otpLogin = async (req, res) => {
   try {
-    const storedEmail = await Otp.findOne({ Otps: req.body.otp })
-    const storedOtp = storedEmail.otp
-    const userOtp = req.body.n1
-
+    const storedEmail = await Otp.findOne({ Otps: req.body.otp });
+    const storedOtp = storedEmail.otp;
+    const userOtp = req.body.n1;
 
     if (storedOtp == userOtp) {
-      await userData.save()
-      await User.findOneAndUpdate({ email: userData.email }, { is_verified: true })
-      return res.render('user/login')
-
-
-
+      await userData.save();
+      await User.findOneAndUpdate(
+        { email: userData.email },
+        { is_verified: true }
+      );
+      return res.render("user/login");
     } else {
-      
-      
       return res.render("user/otp", { message: "wrong Otp" });
-
     }
-
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
   }
-}
-
-
-
+};
 
 const loadLogin = async (req, res) => {
   try {
@@ -166,15 +140,16 @@ const loadLogin = async (req, res) => {
   }
 };
 
-
 const userLogin = async (req, res) => {
   try {
     const userData = await User.findOne({ email: req.body.email });
 
     if (userData) {
-      const passwordMatch = await bcrypt.compare(req.body.password, userData.password);
+      const passwordMatch = await bcrypt.compare(
+        req.body.password,
+        userData.password
+      );
 
-      
       if (passwordMatch) {
         req.session.user = userData._id;
         res.render("user/index", { User: req.session.user });
@@ -192,36 +167,28 @@ const userLogin = async (req, res) => {
 const loadUserProfile = async (req, res) => {
   try {
     if (User) {
-      res.render("user/userprofile")
+      res.render("user/userprofile");
     } else {
-      req.session.destroy()
-      res.render('user/login')
+      req.session.destroy();
+      res.render("user/login");
     }
-
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
   }
-
-}
+};
 
 const resendOtp = async (req, res) => {
   try {
-    const newotp = generateOTP()
+    const newotp = generateOTP();
 
-    
-      verifyEmail(userData.name ,userData.email, newotp)
-      await  Otp.updateOne({email:userData.email},{otp:newotp})
-      
-      res.render('user/otp')
-     
+    verifyEmail(userData.name, userData.email, newotp);
+    await Otp.updateOne({ email: userData.email }, { otp: newotp });
 
+    res.render("user/otp");
   } catch (error) {
-    console.log(error.message)
+    console.log(error.message);
   }
-}
-
-
-
+};
 
 module.exports = {
   loadRegister,
@@ -231,5 +198,5 @@ module.exports = {
   loadLogin,
   userLogin,
   loadUserProfile,
-  resendOtp
+  resendOtp,
 };

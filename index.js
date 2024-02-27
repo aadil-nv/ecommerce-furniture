@@ -24,12 +24,21 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
+
 const userRoute = require("./routes/userRoute");
 app.use("/", userRoute);
+
+const adminRoute = require("./routes/adminRoute");
+app.use("/", adminRoute);
 
 app.get("/", (req, res) => {
   res.render("user/index");
 });
+
+app.get("/adminlogin", (req, res) => {
+  res.render("admin/adminlogin");
+});
+
 app.listen("7777", () => {
   console.log("server has started on http://localhost:7777");
 });
