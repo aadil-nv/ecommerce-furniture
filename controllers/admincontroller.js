@@ -15,7 +15,7 @@ const adminLogin = async (req, res) => {
         console.log(email)
         console.log(password)
         if (adminid.adminemail === email && adminid.adminpassword === password) {
-            res.render('admin/admindashboard')
+            res.redirect('/admindashboard')
         } else {
 
             return res.render('admin/adminlogin')
