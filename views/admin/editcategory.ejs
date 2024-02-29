@@ -1,0 +1,35 @@
+<%- include('../partials/asidenav.ejs')%>
+
+<section class="content-main mt-80 mb-80" >
+    <div class="card mx-auto card-login" style="background-color: rgb(15, 194, 194); ;">
+        <div class="card-body" >
+            <h4 class="card-title mb-4"  >Edit Category</h4>
+
+            <% if (typeof message !=='undefined' ){ %>
+                <h6>
+                    <%=message %>
+                </h6>
+                <% } %>
+            <form  method="post"  action="/editcategory">
+                <div class="mb-3">
+                    <input name="category"  value="<%= category.categoryname %>" class="form-control" placeholder="Category Name" type="text" />
+                </div>
+                
+                <div class="mb-3">
+                    <input  name="descategory"  value="<%= category.categorydescription %>" class="form-control" placeholder="Category Description" type="text" />
+                </div>
+               
+               
+                
+
+                <div class="mb-3">
+                    <!-- <button type="submit" class="btn btn-primary w-50 "  style="padding-left: 50px; margin-left: 70px;">update</button> -->
+                    <input type="hidden" name="id" value="<%= category._id %>">
+                    <input class="btn-success" type="submit" value="Update User">
+                </div>
+                
+            </form>
+            
+        </div>
+    </div>
+</section>

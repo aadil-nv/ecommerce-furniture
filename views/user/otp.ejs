@@ -80,7 +80,7 @@
     function timer(n){
         document.getElementById('resend').disabled= true
         const interval = setInterval(()=>{
-            if(n==-0){
+            if(n==0){
                 clearInterval(interval)
                 document.getElementById("resend").disabled=false
             }
@@ -88,7 +88,7 @@
             n=n-1
         },1000)
     }
-    timer(10)
+    timer(60)
 </script>
 </html>
 

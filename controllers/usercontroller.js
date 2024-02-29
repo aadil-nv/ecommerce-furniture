@@ -143,14 +143,15 @@ const loadLogin = async (req, res) => {
 const userLogin = async (req, res) => {
   try {
     const userData = await User.findOne({ email: req.body.email });
-
+    const block= userData.is_blocked
+      
     if (userData) {
       const passwordMatch = await bcrypt.compare(
         req.body.password,
         userData.password
       );
 
-      if (passwordMatch) {
+      if (passwordMatch&&block==false) {
         req.session.user = userData._id;
         res.render("user/index", { User: req.session.user });
       } else {
@@ -190,6 +191,7 @@ const resendOtp = async (req, res) => {
   }
 };
 
+
 module.exports = {
   loadRegister,
   insertUser,
@@ -199,4 +201,5 @@ module.exports = {
   userLogin,
   loadUserProfile,
   resendOtp,
+  
 };

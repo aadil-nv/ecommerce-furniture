@@ -71,12 +71,12 @@
 
 .btn-light{ 
 	background-color:transparent; 
-	border-color:#c0dbd9;
+	border-color:#0e0a09;
 	box-shadow: none;
 	padding: 0.5rem 0.95rem;
 	&:hover {
 		background-color: $brand;
-		color: #fff !important;
+		color: #000000 !important;
 		i {
 			color: #fff;
 		}
