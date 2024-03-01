@@ -40,34 +40,34 @@
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th>#ID</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Mobile No</th>
+                                <th  style="border: 1px solid black ; padding: 8px;"  >#ID</th>
+                                <th  style="border: 1px solid black ; padding: 8px;" scope="col">Name</th>
+                                <th style="border: 1px solid black ; padding: 8px;"  scope="col">Email</th>
+                                <th  style="border: 1px solid black ; padding: 8px;" scope="col">Mobile No</th>
 
-                                <th scope="col" class="text-end">Action</th>
+                                <th style="border: 1px solid black ; padding: 8px;" scope="col" class="text-end">Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style="border: 1px solid black ; padding: 8px;"  >
                             <% if(user.length> 0) { %>
                                 <% let UID=1;%>
                                     <% user.forEach (data=>{%>
 
-                                        <tr>
-                                            <td>
+                                        <tr style="border: 1px solid black ; padding: 8px;"  >
+                                            <td style="border: 1px solid black ; padding: 8px;"   >
                                                 <%= UID++ ;%>
                                             </td>
-                                            <td><b>
+                                            <td style="border: 1px solid black ; padding: 8px;"  ><b>
                                                     <%= data.name %>
                                                 </b></td>
-                                            <td>
+                                            <td style="border: 1px solid black ; padding: 8px;"  >
                                                 <%= data.email %>
                                             </td>
-                                            <td>
+                                            <td style="border: 1px solid black ; padding: 8px;"  >
                                                 <%= data.mobile %>
                                             </td>
                                             <%if (data.is_blocked===false){ %>
-                                                <td class="text-end"><button  class="btn btn-md rounded font-sm"
+                                                <td class="text-end" style="border: 1px solid black ; padding: 8px;"  ><button  class="btn btn-md rounded font-sm"
                                                         style="background-color: rgb(27, 151, 33); width: 80px; align-items: center; justify-content: center;"
                                                          ><a href="/blockuser?id=<%= data._id %>">Block</a></button></td>
                                                 <%}else{%>

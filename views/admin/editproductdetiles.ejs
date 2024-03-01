@@ -1,0 +1,77 @@
+
+<%- include('../partials/asidenav.ejs')%>
+
+<section class="content-main">
+    <div class="row">
+        <div class="col-9">
+            <div class="content-header">
+                <h2 class="content-title">Edit Product Details</h2>
+            </div>
+        </div>
+        <form  method="post" action="">
+            <div class="col-lg-6">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <label for="product_title" class="form-label">Product Name</label>
+                            <input type="text" placeholder="Type here" class="form-control" name="productName"/>
+                        </div>
+                        <div class="row gx-3">
+                            <div class="mb-3">
+                                <label for="product_sku" class="form-label">Quantity</label>
+                                <input type="text" placeholder="Type here" class="form-control" name="quantity"  />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3">
+                                <label for="product_sku" class="form-label">Category</label>
+                                
+                                <select type="text" placeholder="Type here" class="form-control" name="category" >
+                                   <option selected>categoryId</option>
+                                 
+                              
+                                        <option></option>
+                                   
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="mb-3">
+                                <label for="product_sku" class="form-label">Price</label>
+                                <input type="number" placeholder="Type here" class="form-control" name="price" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- card end -->
+                <div class="card ">
+                    <div class="card-body">
+                        <div>
+                            <label class="form-label">Description</label>
+                            <input placeholder="Type here" class="form-control" rows="4" name="description"  />
+                        </div>
+                    </div>
+                </div>
+                <!-- card end// -->
+                <div class="card ">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Images</label>
+                            <input id="images" name="images" class="form-control" onchange="previewImage(event)" accept="image/*" type="file" multiple />
+                            <p id="image-Error" style="color: red"></p>
+                        </div>
+                        <img class="rounded-2 " style="width: 150px;" id="preview-1" alt="">
+                        <img class="rounded-2 " style="width: 150px;" id="preview-2" alt="">
+                        <img class="rounded-2 " style="width: 150px;" id="preview-3"  alt="">
+                        <img class="rounded-2 " style="width: 150px;" id="preview-4"  alt="">
+                    </div>
+                   
+                </div>
+            </div>
+            <div>
+                <a href="/admin/productdetiles" class="btn btn-primary ">Back</a>
+                <button type="submit" class="btn btn-md rounded font-sm hover-up">Update Products</button>
+            </div>
+        </form> 
+    </div>
+</section>

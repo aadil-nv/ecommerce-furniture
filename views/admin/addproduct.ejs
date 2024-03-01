@@ -1,165 +1,87 @@
 <%- include('../partials/asidenav.ejs')%>
+
+
 <section class="content-main">
     <div class="row">
         <div class="col-9">
             <div class="content-header">
                 <h2 class="content-title">Add New Product</h2>
-                <div>
-                    <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button>
-                    <button class="btn btn-md rounded font-sm hover-up">Publich</button>
-                </div>
             </div>
         </div>
-        <div class="col-lg-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Basic</h4>
-                </div>
-                <div class="card-body">
-                    <form>
-                        <div class="mb-4">
-                            <label for="product_name" class="form-label">Product title</label>
-                            <input type="text" placeholder="Type here" class="form-control" id="product_name" />
+        <form action="/addproduct" method="post"  style="border: 1px solid black ; padding: 8px;" enctype="multipart/form-data">
+            <div class="col-lg-6">
+                <div class="card mb-3"   >
+                    <div class="card-body">
+                        <div class="mb-2">
+                            <label for="product_title" class="form-label">Product Name</label>
+                            <input type="text" placeholder="Type here" class="form-control" name="productName"  style="border: 1px solid black ; padding: 8px;"/>
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label">Full description</label>
-                            <textarea placeholder="Type here" class="form-control" rows="4"></textarea>
+                        <div class="row gx-3">
+                            <div class="mb-3">
+                                <label for="product_sku" class="form-label">Quantity</label>
+                                <input type="text" placeholder="Type here" class="form-control" name="productQuantity" style="border: 1px solid black ; padding: 8px;" />
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-4">
-                                <div class="mb-4">
-                                    <label class="form-label">Regular price</label>
-                                    <div class="row gx-2">
-                                        <input placeholder="$" type="text" class="form-control" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="mb-4">
-                                    <label class="form-label">Promotional price</label>
-                                    <input placeholder="$" type="text" class="form-control" />
-                                </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <label class="form-label">Currency</label>
-                                <select class="form-select">
-                                    <option>USD</option>
-                                    <option>EUR</option>
-                                    <option>RUBL</option>
+                            <div class="mb-3">
+                                <label for="product_sku" class="form-label">Category</label>
+                                <select type="text" placeholder="Type here" class="form-control" name="productCategory"   style="border: 1px solid black ; padding: 8px;">
+                                    <%category.forEach(category=>{%>
+
+                                        <option  value="<%=category.categoryname%>" > <%=category.categoryname%> </option>
+                                   <% })%>
+                                            
+                                       
+                                  
                                 </select>
                             </div>
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label">Tax rate</label>
-                            <input type="text" placeholder="%" class="form-control" id="product_name" />
-                        </div>
-                        <label class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" value="" />
-                            <span class="form-check-label"> Make a template </span>
-                        </label>
-                    </form>
-                </div>
-            </div>
-            <!-- card end// -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Shipping</h4>
-                </div>
-                <div class="card-body">
-                    <form>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Width</label>
-                                    <input type="text" placeholder="inch" class="form-control" id="product_name" />
-                                </div>
-                            </div>
-                            <div class="col-lg-6">
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Height</label>
-                                    <input type="text" placeholder="inch" class="form-control" id="product_name" />
-                                </div>
+                        <div class="row ">
+                            <div class="mb-3">
+                                <label for="product_sku" class="form-label">Price</label>
+                                <input type="text" placeholder="Type here" class="form-control" name="productPrice"  style="border: 1px solid black ; padding: 8px;"/>
                             </div>
                         </div>
-                        <div class="mb-4">
-                            <label for="product_name" class="form-label">Weight</label>
-                            <input type="text" placeholder="gam" class="form-control" id="product_name" />
-                        </div>
-                        <div class="mb-4">
-                            <label for="product_name" class="form-label">Shipping fees</label>
-                            <input type="text" placeholder="$" class="form-control" id="product_name" />
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <!-- card end// -->
-        </div>
-        <div class="col-lg-3">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Media</h4>
-                </div>
-                <div class="card-body">
-                    <div class="input-upload">
-                        <img src="/adminpublic/adminlogin/imgs/theme/upload.svg" alt="" />
-                        <input class="form-control" type="file" />
                     </div>
                 </div>
-            </div>
-            <!-- card end// -->
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h4>Organization</h4>
-                </div>
-                <div class="card-body">
-                    <div class="row gx-2">
-                        <div class="col-sm-6 mb-3">
-                            <label class="form-label">Category</label>
-                            <select class="form-select">
-                                <option>Automobiles</option>
-                                <option>Home items</option>
-                                <option>Electronics</option>
-                                <option>Smartphones</option>
-                                <option>Sport items</option>
-                                <option>Baby and Tous</option>
-                            </select>
-                        </div>
-                        <div class="col-sm-6 mb-3">
-                            <label class="form-label">Sub-category</label>
-                            <select class="form-select">
-                                <option>Nissan</option>
-                                <option>Honda</option>
-                                <option>Mercedes</option>
-                                <option>Chevrolet</option>
-                            </select>
-                        </div>
-                        <div class="mb-4">
-                            <label for="product_name" class="form-label">Tags</label>
-                            <input type="text" class="form-control" />
+                <!-- card end -->
+                <div class="card ">
+                    <div class="card-body">
+                        <div>
+                            <label class="form-label">Description</label>
+                            <input placeholder="Type here" class="form-control" rows="4" name="productDescription"  style="border: 1px solid black ; padding: 8px;"/>
                         </div>
                     </div>
-                    <!-- row.// -->
                 </div>
+                <!-- card end// -->
+                <div class="card ">
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label">Images</label>
+                            <input type="file" name="images" multiple>
+                           
+                            <!-- <input  name="productImages" class="form-control"    multiple  style="border: 1px solid black ; padding: 8px;"  /> -->
+                            <p id="image-Error" style="color: red"></p>
+                        </div>
+                        <img class="rounded-2 " style="width: 150px;" id="preview-1" alt=""  style="border: 1px solid black ; padding: 8px;">
+                        <img class="rounded-2 " style="width: 150px;" id="preview-2" alt=""  style="border: 1px solid black ; padding: 8px;">
+                        <img class="rounded-2 " style="width: 150px;" id="preview-3" alt="" style="border: 1px solid black ; padding: 8px;">
+                        <img class="rounded-2 " style="width: 150px;" id="preview-4" alt=""  style="border: 1px solid black ; padding: 8px;">
+                    </div>
+                   
+                </div>
+                
             </div>
-            <!-- card end// -->
-        </div>
+            <div>
+                <!-- <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Save to draft</button> -->
+                <button type="submit" class="btn btn-md rounded font-sm hover-up">Add Products</button>
+            </div>
+        </form> 
     </div>
 </section>
-<!-- content-main end// -->
-<footer class="main-footer font-xs">
-    <div class="row pb-30 pt-15">
-        <div class="col-sm-6">
-            <script>
-                document.write(new Date().getFullYear());
-            </script>
-            &copy; Nest - HTML Ecommerce Template .
-        </div>
-        <div class="col-sm-6">
-            <div class="text-sm-end">All rights reserved</div>
-        </div>
-    </div>
-</footer>
-</main>
+
+
+
 <script src="/adminpublic/adminlogin/js/vendors/jquery-3.6.0.min.js"></script>
 <script src="/adminpublic/adminlogin/js/vendors/bootstrap.bundle.min.js"></script>
 <script src="/adminpublic/adminlogin/js/vendors/select2.min.js"></script>
@@ -167,5 +89,3 @@
 <script src="/adminpublic/adminlogin/js/vendors/jquery.fullscreen.min.js"></script>
 <!-- Main Script -->
 <script src="/adminpublic/adminlogin/js/main.js?v=1.1" type="text/javascript"></script>
-</body>
-</html>

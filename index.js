@@ -11,6 +11,8 @@ const session=require("express-session")
 const nocache=require('nocache')
 
 
+
+
 app.use(nocache())
 
 app.use(session( {
@@ -31,9 +33,6 @@ app.use("/", userRoute);
 const adminRoute = require("./routes/adminRoute");
 app.use("/", adminRoute);
 
-app.get("/", (req, res) => {
-  res.render("user/index");
-});
 
 app.get("/adminlogin", (req, res) => {
   res.render("admin/adminlogin");

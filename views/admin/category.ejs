@@ -42,36 +42,36 @@
                     <table class="table table-hover" " >
                     <thead>
                         <tr>
-                            <th>UID</th>
-                            <th scope=" col">category Name</th>
-                        <th scope="col">Category Discription</th>
+                            <th  style="border: 1px solid black ; padding: 8px;">UID</th>
+                            <th  style="border: 1px solid black ; padding: 8px;" scope=" col">category Name</th>
+                        <th style="border: 1px solid black ; padding: 8px; " scope="col">Category Discription</th>
 
-                        <th scope="col" class="text-end">Edit</th>
-                        <th scope="col" class="text-end">Delete</th>
+                        <th style="border: 1px solid black ; padding: 8px;"scope="col" class="text-end">Edit</th>
+                        <th style="border: 1px solid black ; padding: 8px;"  scope="col" class="text-end">Delete</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody style="border: 1px solid black ; padding: 8px;" >
                             <% if(category.length > 0) { %>
                                 <% let UID=1;%>
                                     <% category.forEach (data=>{ %>
-                                        <tr>
-                                             <td>
+                                        <tr style="border: 1px solid black ; padding: 8px;">
+                                             <td style="border: 1px solid black ; padding: 8px;">
                                                 <%= UID++ %>
                                             </td>
-                                            <td><b>
+                                            <td style="border: 1px solid black ; padding: 8px;"  ><b>
                                                     <%= data.categoryname %>
                                                 </b></td>
-                                            <td>
+                                            <td style="border: 1px solid black ; padding: 8px;" >
                                                 <%= data.categorydescription %>
-                                            </td>
+                                            </td style="border: 1px solid black ; padding: 8px;" >
 
 
-                                            <td class="text-end">
+                                            <td class="text-end"  style="border: 1px solid black ; padding: 8px;">
 
                                                 <button class="btn btn-sm rounded font-sm"   style="background-color: rgb(27, 143, 151); width: 80px; align-items: center; justify-content: center; " >
                                                     <a href="/editCategory/<%= data._id %>">Edit</a>
                                                 </button>
-                                            </td>
+                                            </td style="border: 1px solid black ; padding: 8px;" >
                                             <%if (data.categorystatus===false){ %>
                                                 <td style="padding-left: 40px; justify-content: center; align-items: center ;display: flex;">
                                                   

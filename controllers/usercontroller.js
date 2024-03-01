@@ -5,13 +5,19 @@ const session = require("express-session");
 const nodemailer = require("nodemailer");
 const path = require("path");
 const { log } = require("console");
+const Products= require('../models/productModel')
 
+
+// --------------OTP Generating-----------------
 const generateOTP = () => {
   return Math.floor(1000 + Math.random() * 9000);
 };
+// ------------------------------End------------------------------------
+
 
 let userData;
 
+// -------------Bcrypting password----------------
 const securedPassword = async (password) => {
   try {
     const passwordHash = await bcrypt.hash(password, 10);
@@ -20,7 +26,9 @@ const securedPassword = async (password) => {
     console.log(erorr.message);
   }
 };
+// ------------------------------End------------------------------------
 
+// -------------Loading Registrationpage-----------
 const loadRegister = async (req, res) => {
   try {
     res.render("user/registration");
@@ -28,6 +36,22 @@ const loadRegister = async (req, res) => {
     console.log(erorr.message);
   }
 };
+// ------------------------------End------------------------------------
+
+
+// ----------------Root Page-----------------------
+
+const home = async (req, res) => {
+  try {
+    const ProductData=await Products.find()
+    res.render("user/index",{ProductData});
+  } catch (erorr) {
+    console.log(erorr.message);
+  }
+};
+// ------------------------------End------------------------------------
+
+// -------------User Inserting Data in signup page----------------
 
 const insertUser = async (req, res) => {
   try {
@@ -81,6 +105,9 @@ const insertUser = async (req, res) => {
     console.log(erorr.message);
   }
 };
+// ------------------------------End------------------------------------
+
+// ----------------Nodemailer OTP send--------------------
 
 const verifyEmail = async (name, email, otp) => {
   try {
@@ -110,6 +137,9 @@ const verifyEmail = async (name, email, otp) => {
     console.log(error.message);
   }
 };
+// ------------------------------End------------------------------------
+
+// ------------------OTP validation-------------------------------- 
 
 const otpLogin = async (req, res) => {
   try {
@@ -131,6 +161,9 @@ const otpLogin = async (req, res) => {
     console.log(error.message);
   }
 };
+// ------------------------------End------------------------------------
+
+// ----------------Loading login page --------------------------------
 
 const loadLogin = async (req, res) => {
   try {
@@ -139,11 +172,15 @@ const loadLogin = async (req, res) => {
     console.log(erorr.message);
   }
 };
+// ------------------------------End------------------------------------
+
+// -------------User Login validaing and entering with userdata --------------------------------------
 
 const userLogin = async (req, res) => {
   try {
     const userData = await User.findOne({ email: req.body.email });
     const block= userData.is_blocked
+    const ProductData=await Products.find()
       
     if (userData) {
       const passwordMatch = await bcrypt.compare(
@@ -153,7 +190,8 @@ const userLogin = async (req, res) => {
 
       if (passwordMatch&&block==false) {
         req.session.user = userData._id;
-        res.render("user/index", { User: req.session.user });
+
+        res.render("user/index",{ProductData,User: req.session.user });
       } else {
         res.render("user/login", { message: "Incorrect Mail and Password" });
       }
@@ -177,6 +215,9 @@ const loadUserProfile = async (req, res) => {
     console.log(error.message);
   }
 };
+// ------------------------------End------------------------------------
+
+// -----------------Resending the OTP-------------------------------
 
 const resendOtp = async (req, res) => {
   try {
@@ -190,6 +231,24 @@ const resendOtp = async (req, res) => {
     console.log(error.message);
   }
 };
+// ------------------------------End------------------------------------
+
+// -------------------Back to userHome with UsererData--------------------------------
+const backToUserHome=async (req,res)=>{
+  try {
+    const ProductData=await Products.find()
+
+    res.render("user/index",{ProductData,User: req.session.user });
+    
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+// ----------------------------------------------End--------------------------------------------
+
+
+
+// -------------------Exporting Controllers-----------------------
 
 
 module.exports = {
@@ -201,5 +260,9 @@ module.exports = {
   userLogin,
   loadUserProfile,
   resendOtp,
+  home,
+  backToUserHome
   
 };
+
+// ------------------------------End------------------------------------
