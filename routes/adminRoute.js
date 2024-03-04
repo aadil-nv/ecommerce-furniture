@@ -35,5 +35,6 @@ admin_route.post("/editCategory", admincontroller.updateCategory);
 admin_route.get('/productlist',admincontroller.productList)
 admin_route.get('/editproductdetiles',admincontroller.editProductDetiles)
 admin_route.post('/addproduct',admincontroller.addNewProduct)
+admin_route.post('/editcategoryfetch/:id',admincontroller.updateCategoryfetch)
 
 module.exports = admin_route;

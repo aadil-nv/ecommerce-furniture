@@ -5,15 +5,13 @@ const session = require("express-session");
 const nodemailer = require("nodemailer");
 const path = require("path");
 const { log } = require("console");
-const Products= require('../models/productModel')
-
+const Products = require("../models/productModel");
 
 // --------------OTP Generating-----------------
 const generateOTP = () => {
   return Math.floor(1000 + Math.random() * 9000);
 };
 // ------------------------------End------------------------------------
-
 
 let userData;
 
@@ -38,13 +36,12 @@ const loadRegister = async (req, res) => {
 };
 // ------------------------------End------------------------------------
 
-
 // ----------------Root Page-----------------------
 
 const home = async (req, res) => {
   try {
-    const ProductData=await Products.find()
-    res.render("user/index",{ProductData});
+    const ProductData = await Products.find();
+    res.render("user/index", { ProductData });
   } catch (erorr) {
     console.log(erorr.message);
   }
@@ -57,7 +54,7 @@ const insertUser = async (req, res) => {
   try {
     const checkemail = await User.findOne({ email: req.body.email });
     if (checkemail) {
-       return res.render("user/registration", {
+      return res.render("user/registration", {
         message: "Email already exist",
       });
     }
@@ -69,17 +66,19 @@ const insertUser = async (req, res) => {
     if (!emailRegex.test(email)) {
       res.render("user/registration", { message: "Invalid Email Provided" });
     }
-    
-    const name = req.body.name;
-const nameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/;
 
-if (!nameRegex.test(name.trim())) {
-  res.render("user/registration", { message: "Invalid Name Provided" });
-}
+    const name = req.body.name;
+    const nameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/;
+
+    if (!nameRegex.test(name.trim())) {
+      res.render("user/registration", { message: "Invalid Name Provided" });
+    }
 
     const mobileRegex = /^\d{10}$/;
     if (!mobileRegex.test(req.body.mno)) {
-      return res.render("user/registration", { message: "Invalid Mobile Number Povided" });
+      return res.render("user/registration", {
+        message: "Invalid Mobile Number Povided",
+      });
     }
 
     const user = new User({
@@ -147,7 +146,7 @@ const verifyEmail = async (name, email, otp) => {
 };
 // ------------------------------End------------------------------------
 
-// ------------------OTP validation-------------------------------- 
+// ------------------OTP validation--------------------------------
 
 const otpLogin = async (req, res) => {
   try {
@@ -155,7 +154,7 @@ const otpLogin = async (req, res) => {
     const storedOtp = storedEmail.otp;
     const { n1, n2, n3, n4 } = req.body;
     const userOtp = `${n1}${n2}${n3}${n4}`;
-    console.log(userOtp)
+    console.log(userOtp);
 
     if (storedOtp == userOtp) {
       await userData.save();
@@ -163,7 +162,9 @@ const otpLogin = async (req, res) => {
         { email: userData.email },
         { is_verified: true }
       );
-      return res.render("user/login",{message:"Successfull Registerd Now Login"});
+      return res.render("user/login", {
+        message: "Successfull Registerd Now Login",
+      });
     } else {
       return res.render("user/otp", { message: "wrong Otp" });
     }
@@ -189,30 +190,35 @@ const loadLogin = async (req, res) => {
 const userLogin = async (req, res) => {
   try {
     const userData = await User.findOne({ email: req.body.email });
-    const block= userData.is_blocked
-    console.log(block)
-    const ProductData=await Products.find()
-      
+    const block = userData.is_blocked;
+
+    const ProductData = await Products.find();
+
     if (userData) {
       const passwordMatch = await bcrypt.compare(
         req.body.password,
         userData.password
       );
 
-      if (passwordMatch&&block===false) {
+      if (passwordMatch && !block) {
         req.session.user = userData._id;
-
-        res.render("user/index",{ProductData,User: req.session.user });
+        res.render("user/index", { ProductData, User: req.session.user });
+      } else if (block) {
+        res.render("user/login", { message: "Your Account has been blocked" });
       } else {
-        res.redirect("/login", { message: "Incorrect Mail and Password" });
+        res.render("user/login", { message: "Incorrect Mail and Password" });
       }
     } else {
-      res.redirect("login", { message: "You have been blocked" });
+      res.render("user/login", { message: "Your Account has been blocked" });
     }
   } catch (error) {
     console.log(error.message);
   }
 };
+
+// -------------------------------------------End---------------------------------------------
+
+// -------------------------------------------Loading User Profile-------------------------------------------
 
 const loadUserProfile = async (req, res) => {
   try {
@@ -226,15 +232,13 @@ const loadUserProfile = async (req, res) => {
     console.log(error.message);
   }
 };
-// ------------------------------End------------------------------------
+// ------------------------------End Loading UserProfile------------------------------------
 
 // -----------------Resending the OTP-------------------------------
 
 const resendOtp = async (req, res) => {
   try {
     const newotp = generateOTP();
-
-    console.log(newotp);
 
     verifyEmail(userData.name, userData.email, newotp);
     await Otp.updateOne({ email: userData.email }, { otp: newotp });
@@ -247,96 +251,72 @@ const resendOtp = async (req, res) => {
 // ------------------------------End------------------------------------
 
 // -------------------Back to userHome with UsererData--------------------------------
-const backToUserHome=async (req,res)=>{
+const backToUserHome = async (req, res) => {
   try {
-    const ProductData=await Products.find()
+    const ProductData = await Products.find();
 
-    res.render("user/index",{ProductData,User: req.session.user });
-    
-  } catch (error) {
-    console.log(error.message)
-  }
-}
-// ----------------------------------------------End--------------------------------------------
-
-
-
-
-// ----------------------------------------------Loading ShopPage-------------------------------------------
-
-
-const loadShopPage=async (req,res)=>{
-  try {
-
-   
-      res.render('user/shop',{User})
-    
-    
-    
+    res.render("user/index", { ProductData, User: req.session.user });
   } catch (error) {
     console.log(error.message);
   }
-}
+};
+// ----------------------------------------------End--------------------------------------------
+
+// ----------------------------------------------Loading ShopPage-------------------------------------------
+
+const loadShopPage = async (req, res) => {
+  try {
+    res.render("user/shop", { User });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 // ----------------------------------------------End--------------------------------------------
 
+// ----------------------------------------------Loading AboutPage-------------------------------------------
 
-// ----------------------------------------------Loading ShopPage-------------------------------------------
-
-const loadAboutPage=async (req,res) =>{
+const loadAboutPage = async (req, res) => {
   try {
-    res.render('user/about',{User})
-    
+    res.render("user/about", { User });
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
-
-
-// ----------------------------------------------Loading ShopPage-------------------------------------------
+// ----------------------------------------------Ending AboutPage-------------------------------------------
 
 // ----------------------------------------------Loading ShopPage-------------------------------------------
-const loadContactPage=async (req,res) =>{
+const loadContactPage = async (req, res) => {
   try {
-    res.render('user/contact',{User})
-    
+    res.render("user/contact", { User });
   } catch (error) {
     console.log(error.message);
   }
-}
-
-
+};
 
 // ----------------------------------------------End ShopPage-------------------------------------------
 
 // ----------------------------------------------Loading Product Tab-------------------------------------------
 
-const loadProductTab=async (req,res)=>{
+const loadProductTab = async (req, res) => {
   try {
-
-    const productId = req.params.id
-    const savedData= await Products.findById(productId)
+    const productId = req.params.id;
+    const savedData = await Products.findById(productId);
     console.log(savedData);
-    
-    if(savedData){
 
-      res.render('user/producttab',{savedData})
+    if (savedData) {
+      res.render("user/producttab", { savedData });
     }
-    res.redirect('index')
-    
+    res.redirect("index");
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
 // ----------------------------------------------End Product Tab-------------------------------------------
 
-
-
-
 // -------------------Exporting Controllers-----------------------
-
 
 module.exports = {
   loadRegister,
@@ -351,8 +331,7 @@ module.exports = {
   backToUserHome,
   loadShopPage,
   loadAboutPage,
-  loadProductTab
-  
+  loadProductTab,
 };
 
 // ------------------------------End------------------------------------

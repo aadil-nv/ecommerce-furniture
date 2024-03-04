@@ -17,10 +17,10 @@
                                         <div class="login-register-form">
                                             <form action="/userhome" method="post"  onsubmit="return handleSubmit()">
 
-                                              <p id="show1" class="text-danger" style="text-align: center;"></p>
+                                              <p id="show1" class="text-danger" ></p>
                                                 <% if(typeof message!=='undefined' ){ %>
 
-                                                    <h6 id="errorMessage"  style="color: red;" style="justify-content: center; align-items: center;">
+                                                    <h6 id="errorMessage"  style="color: red;" style="justify-content: center; text-align: center;">
                                                         <%= message %>
                                                     </h6>
                                                     <% } %>
