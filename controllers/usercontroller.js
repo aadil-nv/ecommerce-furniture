@@ -57,21 +57,29 @@ const insertUser = async (req, res) => {
   try {
     const checkemail = await User.findOne({ email: req.body.email });
     if (checkemail) {
-      return res.render("user/registration", {
+       return res.render("user/registration", {
         message: "Email already exist",
       });
     }
+
     const spassword = await securedPassword(req.body.password);
 
     const email = req.body.email;
     const emailRegex = /^[A-Za-z0-9.%+-]+@gmail\.com$/;
     if (!emailRegex.test(email)) {
-      res.render("user/registration", { message: "Invalid email provided" });
+      res.render("user/registration", { message: "Invalid Email Provided" });
     }
+    
     const name = req.body.name;
+const nameRegex = /^[a-zA-Z]+(?: [a-zA-Z]+)*$/;
 
-    if (!name || !/^[a-zA-Z][a-zA-Z\s]*$/.test(name)) {
-      res.render("user/registration", { message: "Inavlid name provided" });
+if (!nameRegex.test(name.trim())) {
+  res.render("user/registration", { message: "Invalid Name Provided" });
+}
+
+    const mobileRegex = /^\d{10}$/;
+    if (!mobileRegex.test(req.body.mno)) {
+      return res.render("user/registration", { message: "Invalid Mobile Number Povided" });
     }
 
     const user = new User({
@@ -145,7 +153,9 @@ const otpLogin = async (req, res) => {
   try {
     const storedEmail = await Otp.findOne({ Otps: req.body.otp });
     const storedOtp = storedEmail.otp;
-    const userOtp = req.body.n1;
+    const { n1, n2, n3, n4 } = req.body;
+    const userOtp = `${n1}${n2}${n3}${n4}`;
+    console.log(userOtp)
 
     if (storedOtp == userOtp) {
       await userData.save();
@@ -153,7 +163,7 @@ const otpLogin = async (req, res) => {
         { email: userData.email },
         { is_verified: true }
       );
-      return res.render("user/login");
+      return res.render("user/login",{message:"Successfull Registerd Now Login"});
     } else {
       return res.render("user/otp", { message: "wrong Otp" });
     }
@@ -180,6 +190,7 @@ const userLogin = async (req, res) => {
   try {
     const userData = await User.findOne({ email: req.body.email });
     const block= userData.is_blocked
+    console.log(block)
     const ProductData=await Products.find()
       
     if (userData) {
@@ -188,15 +199,15 @@ const userLogin = async (req, res) => {
         userData.password
       );
 
-      if (passwordMatch&&block==false) {
+      if (passwordMatch&&block===false) {
         req.session.user = userData._id;
 
         res.render("user/index",{ProductData,User: req.session.user });
       } else {
-        res.render("user/login", { message: "Incorrect Mail and Password" });
+        res.redirect("/login", { message: "Incorrect Mail and Password" });
       }
     } else {
-      res.render("user/login", { message: "Incorrect Mail and Password" });
+      res.redirect("login", { message: "You have been blocked" });
     }
   } catch (error) {
     console.log(error.message);
@@ -223,6 +234,8 @@ const resendOtp = async (req, res) => {
   try {
     const newotp = generateOTP();
 
+    console.log(newotp);
+
     verifyEmail(userData.name, userData.email, newotp);
     await Otp.updateOne({ email: userData.email }, { otp: newotp });
 
@@ -248,6 +261,80 @@ const backToUserHome=async (req,res)=>{
 
 
 
+
+// ----------------------------------------------Loading ShopPage-------------------------------------------
+
+
+const loadShopPage=async (req,res)=>{
+  try {
+
+   
+      res.render('user/shop',{User})
+    
+    
+    
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+// ----------------------------------------------End--------------------------------------------
+
+
+// ----------------------------------------------Loading ShopPage-------------------------------------------
+
+const loadAboutPage=async (req,res) =>{
+  try {
+    res.render('user/about',{User})
+    
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+
+
+// ----------------------------------------------Loading ShopPage-------------------------------------------
+
+// ----------------------------------------------Loading ShopPage-------------------------------------------
+const loadContactPage=async (req,res) =>{
+  try {
+    res.render('user/contact',{User})
+    
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+
+
+// ----------------------------------------------End ShopPage-------------------------------------------
+
+// ----------------------------------------------Loading Product Tab-------------------------------------------
+
+const loadProductTab=async (req,res)=>{
+  try {
+
+    const productId = req.params.id
+    const savedData= await Products.findById(productId)
+    console.log(savedData);
+    
+    if(savedData){
+
+      res.render('user/producttab',{savedData})
+    }
+    res.redirect('index')
+    
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+// ----------------------------------------------End Product Tab-------------------------------------------
+
+
+
+
 // -------------------Exporting Controllers-----------------------
 
 
@@ -261,7 +348,10 @@ module.exports = {
   loadUserProfile,
   resendOtp,
   home,
-  backToUserHome
+  backToUserHome,
+  loadShopPage,
+  loadAboutPage,
+  loadProductTab
   
 };
 

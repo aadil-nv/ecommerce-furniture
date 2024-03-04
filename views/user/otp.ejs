@@ -1,95 +1,165 @@
+<%- include('../partials/mainheader.ejs')%>
+   
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+       integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+       crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            background-color: #ebecf0;
+        }
+
+        .otp-letter-input {
+            max-width: 100%;
+            height: 90px;
+            border: 1px solid #e95921;
+            border-radius: 10px;
+            color: #e95921;
+            font-size: 60px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .btn {
+            height: 50px;
+        }
+        button:focus,
+        input:focus{
+          outline: none;
+          box-shadow: none;
+          
+        }
+        a,
+        a:hover{
+          text-decoration: none;
+          
+        }
+
+        body{
+          font-family: 'Roboto', sans-serif;
+        }
+
+        /*------------------  */
+        .otp-form-group{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .otp-inputbar{
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            text-align: center;
+            margin-right: 10px;
+            font-size: 16px;
+            color: #e95921;
+        }
+       
+        
+    </style>
 
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive OTP Verification Form Using Bootstrap 5</title>
-	<!-- Bootstrap 5 CDN Link -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <div class="container p-5">
+        <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-5 mt-5">
+                <div class="bg-white p-5 rounded-3 shadow-sm border">
+                    <div>
+                        <form action="/otp" method="post" >
+                            
+                            <p class="text-center text-success" style="font-size: 5.5rem;"><i
+                                    class="fa-solid fa-envelope-circle-check" style="color: #e95921;"></i></p>
+                            <p class="text-center text-center h5 ">Please check your email</p>
+                            <p class="text-muted text-center">We've sent a code to contact@curfcode.com</p>
+                            <div class="msg" style="color: red; justify-content: center; align-items: center; display: flex;" >
+                                <p id="errmsg" style="color: red;" ></p>
+                                <% if(typeof message!=='undefined' ){ %>
 
-	<!-- Custom CSS Link -->
-	<link rel="stylesheet" href="/userpublic/otppage/style.css">
-</head>
-<body> 
-    <section class="wrapper">
-		<div class="container">
-			<div class="col-sm-8 offset-sm-2 col-lg-6 offset-lg-3 col-xl-6 offset-xl-3 text-center">
-				<
-				<form action="/otp" method="post" class="rounded bg-white shadow p-5"  >
-					<h3 class="text-dark fw-bolder fs-4 mb-2">Two Step Verification</h3>
+                                    <h6 style="color: red;">
+                                        <%= message %>
+                                    </h6>
+                                    <% } %>
 
-					<div class="fw-normal text-muted mb-4">
-						Enter the verification code we sent to
-					</div>  
+                            </div>
 
-                    <div class="d-flex align-items-center justify-content-center fw-bold mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
-                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
-                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
-                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
-                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
-                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
-                        </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-asterisk" viewBox="0 0 16 16">
-                            <path d="M8 0a1 1 0 0 1 1 1v5.268l4.562-2.634a1 1 0 1 1 1 1.732L10 8l4.562 2.634a1 1 0 1 1-1 1.732L9 9.732V15a1 1 0 1 1-2 0V9.732l-4.562 2.634a1 1 0 1 1-1-1.732L6 8 1.438 5.366a1 1 0 0 1 1-1.732L7 6.268V1a1 1 0 0 1 1-1z"/>
-                        </svg>
-                        <span>8459</span>
+                            <div class="otp-form-group">
+                                <input class="otp-inputbar"   name="n1"  type="text" maxlength="1" oninput="validateInput(this)" onkeydown="handleBackspace(event, this)" autofocus>
+                                <input class="otp-inputbar"  name="n2"  type="text" maxlength="1" oninput="validateInput(this)" onkeydown="handleBackspace(event, this)">
+                                <input class="otp-inputbar"  name="n3"  type="text" maxlength="1" oninput="validateInput(this)" onkeydown="handleBackspace(event, this)">
+                                <input class="otp-inputbar"  name="n4"  type="text" maxlength="1" oninput="validateInput(this)" onkeydown="handleBackspace(event, this)">
+                            </div>
+                            <p id="errmsg" class="text-muted text-center"></p>
+
+                            
+                            <div class="row pt-5">
+                                <div class="col-6">
+                                    <button type="button" class="btn btn-outline-secondary w-100" >Cancel</button>
+                                </div>
+                                <div class="col-6"  >
+                                    <button type="submit" class="btn btn-success w-100" >Verify</button>
+                                </div>
+                            </form>
+                            <form action="/resendotp" method="post">
+                                <div class="fw-normal text-muted mb-2" style="padding-top: 25px; justify-content: center; align-items: center;">
+                                    Didn’t get the code ?<button class=" btn " type="submit"  id="resend">Resend OTP</button >
+                                        <span class="time"></span>
+                                </div>
+                            </form>
                     </div>
-                    <% if(typeof message!=='undefined' ){ %>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 
-                        <h6 style="color: red;">
-                            <%= message %>
-                        </h6>
-                        <% } %>
+    <script>
+        function timer(n){
+            document.getElementById('resend').disabled= true
+            const interval = setInterval(()=>{
+                if(n==0){
+                    clearInterval(interval)
+                    document.getElementById("resend").disabled=false
+                }
+                document.querySelector(".time").innerHTML=n
+                n=n-1
+            },1000)
+        }
+        timer(5)
+    </script>
+        
+        
+    <script>
+       
 
-
-
-
-					<div class="otp_input text-start mb-2">
-                        <label for="digit">Type your 6 digit security code</label>
-						<div class="d-flex align-items-center justify-content-between mt-2">
-                            <input type="number" name="n1" class="form-control">
-                        </div> 
-					</div>  
-
-					<button type="submit" class="btn btn-primary submit_btn my-4">Submit</button> 
-
-				</form>
-                <form action="/resendotp" method="post">
-                    <div class="fw-normal text-muted mb-2">
-                        Didn’t get the code ?<button class="btn-success" type="submit"  id="resend">Resend OTP</button >
-                            <span class="time"></span>
-                    </div>
-                </form>
-			</div>
-		</div>
-	</section>
-</body>
-<script>
-    function timer(n){
-        document.getElementById('resend').disabled= true
-        const interval = setInterval(()=>{
-            if(n==0){
-                clearInterval(interval)
-                document.getElementById("resend").disabled=false
+        function validateInput(input) {
+            const value = input.value;
+            if (!/^\d*$/.test(value)) {
+                input.value = '';
+                document.getElementById('errmsg').innerText = "Only numbers are allowed";
+                setTimeout(() => {
+                    document.getElementById('errmsg').innerText = '';
+                }, 2000);
+            } else {
+                document.getElementById('errmsg').innerText = '';
             }
-            document.querySelector(".time").innerHTML=n
-            n=n-1
-        },1000)
-    }
-    timer(60)
-</script>
-</html>
+        }
 
+        function handleBackspace(event, input) {
+            if (event.key === 'Backspace' && input.value === '') {
+                const previousInput = input.previousElementSibling;
+                if (previousInput) {
+                    previousInput.focus();
+                }
+            } else if (/^\d*$/.test(event.key) && input.value.length === 1) {
+                const nextInput = input.nextElementSibling;
+                if (nextInput) {
+                    nextInput.focus();
+                }
+            }
+        }
 
+        
+
+        
+    </script>
+
+<%- include('../partials/mainfooter.ejs')%>
