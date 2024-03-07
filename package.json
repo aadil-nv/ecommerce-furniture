@@ -26,6 +26,8 @@
     "passport-google-oauth2": "^0.2.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-oauth2": "^1.8.0",
-    "save": "^2.9.0"
+    "path": "^0.12.7",
+    "save": "^2.9.0",
+    "sharp": "^0.33.2"
   }
 }

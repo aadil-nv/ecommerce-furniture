@@ -87,6 +87,7 @@ const insertUser = async (req, res) => {
       mobile: req.body.mno,
       password: spassword,
       is_admin: 0,
+      is_blocked:false
     });
 
     userData = user;
@@ -150,9 +151,7 @@ const verifyEmail = async (name, email, otp) => {
 
 const otpLogin = async (req, res) => {
   try {
-    const storedEmail = await Otp.findOne({ Otps: req.body.otp }).sort({
-      createdAt: -1,
-    });
+    const storedEmail = await Otp.findOne({ Otps: req.body.otp }).sort({createdAt:-1});
     const storedOtp = storedEmail.otp;
     const { n1, n2, n3, n4 } = req.body;
     const userOtp = `${n1}${n2}${n3}${n4}`;
@@ -192,10 +191,16 @@ const loadLogin = async (req, res) => {
 const userLogin = async (req, res) => {
   try {
     const userData = await User.findOne({ email: req.body.email });
+    console.log(userData);
+    
+    if (!userData) {
+      res.render("user/login", { message: "Not a user" });
+    }
+    
     const block = userData.is_blocked;
 
     const ProductData = await Products.find();
-
+     
     if (userData) {
       const passwordMatch = await bcrypt.compare(
         req.body.password,
@@ -204,7 +209,7 @@ const userLogin = async (req, res) => {
 
       if (passwordMatch && !block) {
         req.session.user = userData._id;
-        res.render("user/index", { ProductData, User: req.session.user });
+        res.render("user/index", { ProductData, User: req.session.user});
       } else if (block) {
         res.render("user/login", { message: "Your Account has been blocked" });
       } else {
@@ -225,7 +230,7 @@ const userLogin = async (req, res) => {
 const loadUserProfile = async (req, res) => {
   try {
     if (User) {
-      res.render("user/userprofile", { User });
+      res.render("user/userprofile");
     } else {
       req.session.destroy();
       res.render("user/login");
@@ -257,7 +262,7 @@ const backToUserHome = async (req, res) => {
   try {
     const ProductData = await Products.find();
 
-    res.render("user/index", { ProductData, User });
+    res.render("user/index", { ProductData, User: req.session.user });
   } catch (error) {
     console.log(error.message);
   }
@@ -318,16 +323,20 @@ const loadProductTab = async (req, res) => {
 
 // ----------------------------------------------End Product Tab-------------------------------------------
 
+
 // ----------------------------------------------Loding Google Auth-------------------------------------------
 
-const loadGoogleAuth = async (req, res) => {
+const loadGoogleAuth=async (req,res)=>{
   try {
     const ProductData = await Products.find();
-    res.render("user/index", { ProductData, User });
+    res.render('user/index',{ProductData,User})
+    
   } catch (error) {
-    console.log(error.message);
+    console.log(error.message)
   }
-};
+}
+
+
 
 // -------------------Exporting Controllers-----------------------
 
@@ -345,7 +354,7 @@ module.exports = {
   loadShopPage,
   loadAboutPage,
   loadProductTab,
-  loadGoogleAuth,
+  loadGoogleAuth
 };
 
 // ------------------------------End------------------------------------

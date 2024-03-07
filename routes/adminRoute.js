@@ -33,8 +33,11 @@ admin_route.get('/adminBlockcategory/:id',admincontroller.blockCategory)
 admin_route.get('/editCategory/:id',admincontroller.editCategory)
 admin_route.post("/editCategory", admincontroller.updateCategory);
 admin_route.get('/productlist',admincontroller.productList)
-admin_route.get('/editproductdetiles',admincontroller.editProductDetiles)
+admin_route.get('/editproductdetiles/:id',admincontroller.editProductDetiles)
 admin_route.post('/addproduct',admincontroller.addNewProduct)
 admin_route.post('/editcategoryfetch/:id',admincontroller.updateCategoryfetch)
+admin_route.post('/editproductdetilesfetch/:id',upload.array('photos'),admincontroller.updateProductsFetch)
+admin_route.get('/listProduct',admincontroller.listProduct) 
+admin_route.get('/editproductdetilesfetch/:id',admincontroller.deleteProductImage)
 
 module.exports = admin_route;

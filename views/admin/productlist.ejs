@@ -10,7 +10,7 @@
             <p>here are products</p>
         </div>
         <div>
-            <a type="button" class="btn btn-primary" href="/admin/addProducts">add Products</a>
+            <a type="button" class="btn btn-primary" href="/addproduct">add Products</a>
         </div>
     </div>
 
@@ -41,20 +41,20 @@
                               
                                         <tr>
                                             <td style="border: 1px solid black ; padding: 8px;"><%= UID++ %></td>
-                                            <td style="border: 1px solid black ; padding: 8px;">  <img src="/uploads/<%= data.productimage[0] %>" width="90px" class="rounded-3 " a/></td>
+                                            <td style="border: 1px solid black ; padding: 8px;">  <img src="/uploads/<%= data.productimage[0] %>" width="90px" class="rounded-3 "/></td>
                                             <td  style="border: 1px solid black ; padding: 8px;"><%= data.productname %></td>
                                             <td style="border: 1px solid black ; padding: 8px;" ><%= data.productquadity %></ >
                                          <td style="border: 1px solid black ; padding: 8px;" ><%= data.categoryId %></ >
                                          <td style="border: 1px solid black ; padding: 8px;" ><%= data.productprice %></ >
                                             <td style="border: 1px solid black ; padding: 8px;" >
-                                                <button class="btn btn-info"><a href="/editproductdetiles">Edit</a></button></td>
+                                                <button class="btn btn-info"><a href="/editproductdetiles/<%= data._id %>" >Edit</a></button></td>
                                                 <%if (data.isListed===true){ %>
                                             <td style="border: 1px solid black ; padding: 8px;" >
-                                                <button class="btn btn-success"><a >List</a></button>
+                                                <button class="btn btn-success"><a  href="/listProduct?id=<%= data._id %>"  >List</a></button>
                                             </td>
                                             <%}else{%>
                                                 <td style="border: 1px solid black ; padding: 8px;" >
-                                                    <button class="btn btn-danger"><a >List</a></button>
+                                                    <button class="btn btn-danger"><a href="/listProduct?id=<%= data._id %>">List</a></button>
                                                 </td>
                                                 <% } %>
                                                 <% })%>
@@ -70,7 +70,7 @@
                                 
                                 </tbody>
                            
-                                <h4 class="text-center">No products to ist</h4>
+                             
                           
                         </table>
                     </div>

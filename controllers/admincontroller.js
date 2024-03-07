@@ -1,4 +1,5 @@
 const express = require("express");
+const mongoose = require('mongoose');
 const app = express();
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
@@ -7,6 +8,7 @@ const Addcategory = require("../models/categoryModel");
 const Products = require("../models/productModel");
 const multer = require("multer");
 const path = require("path");
+const sharp = require("sharp");
 
 // ---------------------Multer image saving--------------------------
 const storage = multer.diskStorage({
@@ -227,15 +229,98 @@ const productList = async (req, res) => {
     console.log(error.message);
   }
 };
+
+// ------------------------------Updating Product  ------------------------------------
+
 const editProductDetiles = async (req, res) => {
   try {
-    res.render("admin/editproductdetiles");
+    const id = req.params.id;
+    const product = await Products.findById(id);
+    const productlist = await Products.find();
+    const category = await Addcategory.find();
+    const categoryid = await Addcategory.findById({ _id: id });
+
+    res.render("admin/editproductdetiles", { product, category });
   } catch (error) {
     console.log(error.message);
   }
 };
 
-// --------------------------------------------End----------------------------------------------------------------
+// ------------------------------ Ending Updating Product  ------------------------------------
+
+// --------------------------------------------Upadating Product detiles----------------------------------------------------------------
+
+const updateProductsFetch = async (req, res) => {
+  try {
+    // Extract product ID from request parameters
+    const productId = req.params.id;
+    const { name, des, price, quandity, category, photos } = req.body;
+    const product = await Products.findById(productId);
+    const imageCount = product.productimage.length;
+
+    const productData = {};
+
+    // Check if product name, description, price, quantity, and category are provided in the request body
+    if (req.body.name) {
+      await Products.findByIdAndUpdate(
+        { _id: productId },
+        { productname: req.body.name }
+      );
+    }
+    if (req.body.des) {
+      await Products.findByIdAndUpdate(
+        { _id: productId },
+        { productdescription: req.body.des }
+      );
+    }
+    if (req.body.price) {
+      await Products.findByIdAndUpdate(
+        { _id: productId },
+        { productprice: req.body.price }
+      );
+    }
+    if (req.body.quandity) {
+      await Products.findByIdAndUpdate(
+        { _id: productId },
+        { productquadity: req.body.quandity }
+      );
+    }
+    if (req.body.catagory) {
+      await Products.findByIdAndUpdate(
+        { _id: productId },
+        { productcategory: req.body.category }
+      );
+    }
+    console.log(imageCount);
+
+    const MAX_IMAGES = 4;
+    const remainingImages = MAX_IMAGES - imageCount;
+
+    if (remainingImages > 0) {
+      const imageUrls = [];
+      for (let i = 0; i < Math.min(req.files.length, remainingImages); i++) {
+        const imageBuffer = await sharp(req.files[i].path)
+          .resize({ width: 400, height: 500, fit: sharp.fit.cover })
+          .toBuffer();
+        const filename = `cropped_${req.files[i].originalname}`;
+        imageUrls.push(filename);
+
+        await sharp(imageBuffer).toFile(
+          path.join(__dirname, `../public/uploads/${filename}`)
+        );
+      }
+      await Products.findByIdAndUpdate(productId, {
+        $push: { productimage: { $each: imageUrls } },
+      });
+    }
+
+    res.redirect("/productlist");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// --------------------------------------------End  Upadating Product detile----------------------------------------------------------------
 
 // --------------------------Adding NewProduct into Product and saving Product data Into Database------------------------------
 
@@ -243,10 +328,24 @@ const addNewProduct = async (req, res) => {
   try {
     upload(req, res, async function (err) {
       if (err) {
-        const errorMsg = "Image more than 4 is not allowed";
+        errorImage.innerHTML = "Only jpg/jpeg and png files are allowed!";
 
         console.log(errorMsg);
         return res.redirect("/addproduct");
+      }
+      let imageUrls = [];
+      if (req.files) {
+        for (i = 0; i < req.files.length; i++) {
+          const imageBuffer = await sharp(req.files[i].path)
+            .resize({ width: 400, height: 500, fit: sharp.fit.cover })
+            .toBuffer();
+          const filename = `cropped_${req.files[i].originalname}`;
+          imageUrls[i] = filename;
+
+          await sharp(imageBuffer).toFile(
+            path.join(__dirname, `../public/uploads/${filename}`)
+          );
+        }
       }
 
       const alreadyProduct = await Products.findOne({
@@ -265,7 +364,7 @@ const addNewProduct = async (req, res) => {
         productquadity: req.body.productQuantity,
         productdescription: req.body.productDescription,
         categoryId: req.body.productCategory,
-        productimage: req.files.map((file) => file.filename),
+        productimage: imageUrls,
         isListed: true,
       });
 
@@ -279,7 +378,6 @@ const addNewProduct = async (req, res) => {
 };
 // --------------------------End Adding NewProduct into Product and saving Product data Into Database------------------------------
 
-
 // --------------------------Upadating The data in the Category ------------------------------
 
 const updateCategoryfetch = async (req, res) => {
@@ -290,18 +388,20 @@ const updateCategoryfetch = async (req, res) => {
     const existingCategory = await Addcategory.findOne({ categoryname: name });
 
     const existingDescription = await Addcategory.findOne({
-      categorydescription: des
+      categorydescription: des,
     });
-  
 
     if (existingCategory && existingCategory._id != catId) {
       return res.json({ already: "Name Already in the Category" });
     } else if (existingDescription && existingDescription._id != catId) {
       return res.json({ already: "Descategory Already in the Category" });
     } else {
-      await Addcategory.findByIdAndUpdate({_id:catId},
-        {$set: { categoryname: name, categorydescription: des },
-      });
+      await Addcategory.findByIdAndUpdate(
+        { _id: catId },
+        {
+          $set: { categoryname: name, categorydescription: des },
+        }
+      );
       return res.json({ success: "Category updated successfully" });
     }
   } catch (err) {
@@ -310,12 +410,50 @@ const updateCategoryfetch = async (req, res) => {
   }
 };
 
-
 // --------------------------End Upadating The data in the Category ------------------------------
 
+// --------------------------Listing or un listing products ------------------------------
+
+const listProduct = async (req, res) => {
+  try {
+    const id = req.query.id;
+    const product = await Products.findById(id);
+    console.log(product);
+    if (product.isListed == true) {
+      await Products.updateOne({ _id: id }, { isListed: false });
+    } else {
+      await Products.updateOne({ _id: id }, { isListed: true });
+    }
+    res.redirect("productlist");
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+// --------------------------Ending Listing or un listing products ------------------------------
+
+// --------------------------Deleting Image in edit Product detiles  ------------------------------
+
+const deleteProductImage = async (req, res) => {
+  try {
+    const productId = mongoose.Types.ObjectId.createFromHexString(req.params.id);
+    const { name } = req.query;
+    console.log(productId);
+    console.log(name);
+
+    const result = await Products.findByIdAndUpdate(
+      productId,
+      { $pull: { productimage: name } },
+
+    );
+    res.redirect(`/editproductdetiles/${productId}`)
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 
-
+// --------------------------Ending Deleting Image in edit Product detiles  ------------------------------
 
 // ------------------------------------------------End--------------------------------------------------------
 
@@ -335,4 +473,7 @@ module.exports = {
   editProductDetiles,
   addNewProduct,
   updateCategoryfetch,
+  updateProductsFetch,
+  listProduct,
+  deleteProductImage,
 };
