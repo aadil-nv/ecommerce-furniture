@@ -119,16 +119,17 @@
                                 <!-- <div class="header-action-style">
                                     <a title="Login Register" href="login-register.html"><i class="pe-7s-user"></i></a>
                                 </div> -->
-                                <% if(locals.User){ %>
-                                    <div class="header-action-style">
+                                <% if(locals.customer){ %>
+                                    <div class="header-action-style" style="padding-top: 12px;">
                                         <a title="Login Register" href="/userprofile"><i
-                                                class="fa-solid fa-user"></i></i></a>
+                                                class="fa-solid fa-user fa-sm "></i></a>
                                     </div>
                                     <% }else{ %>
                                         <div class="header-action-style">
                                             <a title="Login Register" href="/login"><i class="pe-7s-user"></i></a>
                                         </div>
                                         <%}%>
+
                                             <div class="header-action-style">
                                                 <a title="Wishlist" href="wishlist.html"><i class="pe-7s-like"></i></a>
                                             </div>

@@ -1,36 +1,68 @@
 <%- include('../partials/asidenav.ejs')%>
 
+<section class="content-main mt-100">
+    <div class="card mx-auto card-login" style="background-color: rgb(115, 91, 223);">
+        <div class="card-body">
+            <h4 class="card-title mb-4">Add New Category</h4>
+            <form action="" method="post" onsubmit="return validateForm()">
+                <div class="mb-3">
+                    <input id="category" name="category" class="form-control" placeholder="Name of Category" type="text" />
+                    <span id="categoryError" class="error"></span>
+                </div>
 
+                <div class="mb-3">
+                    <input id="descategory" name="descategory" class="form-control" placeholder="Description of Category" type="text" />
+                    <span id="descategoryError" class="error"></span>
+                </div>
 
-    <section class="content-main  mt-100"  >
-        <div class="card mx-auto  card-login" style="background-color: rgb(115, 91, 223); ">
-            <div class="card-body" >
-                <h4 class="card-title mb-4"  >Add New Category</h4>
-                <form action=""  method="post">
-                    <div class="mb-3">
-                        <input  name="category"  class="form-control" placeholder="Name of Category" type="text" />
-                    </div>
-                  
-                    <div class="mb-3">
-                        <input  name="descategory" class="form-control" placeholder="Discription of Category" type="text" />
-                    </div>
-                  
-                    <div class="mb-3">
-                        <button type="submit" class="btn btn-primary w-20 "  style="padding-left: 50px; margin-left: 70px;">Add Category</button>
-                    </div>
-             
-                </form>
-                
-            </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary w-20" style="padding-left: 50px; margin-left: 70px;">Add Category</button>
+                </div>
+            </form>
         </div>
-    </section>
+    </div>
+</section>
 
+<script>
+    function validateForm() {
+        var category = document.getElementById('category').value.trim();
+        var descategory = document.getElementById('descategory').value.trim();
+        var categoryError = document.getElementById('categoryError');
+        var descategoryError = document.getElementById('descategoryError');
+        var onlyLetters = /^[A-Za-z]+$/;
 
-</main>
+        categoryError.textContent = '';
+        descategoryError.textContent = '';
+
+        if (category === "") {
+            categoryError.innerHTML = 'Please enter a valid input';
+            return false;
+        }
+
+        if (!onlyLetters.test(category)) {
+            categoryError.innerHTML = 'Only characters are allowed';
+            return false;
+        }
+
+        if (descategory === "") {
+            descategoryError.innerHTML = 'Please enter a valid input';
+            return false;
+        }
+
+        if (!onlyLetters.test(descategory)) {
+            descategoryError.innerHTML = 'Only characters are allowed';
+            return false;
+        }
+
+        return true; // Form submission allowed
+    }
+</script>
+
 <script src="/adminpublic/adminlogin/js/vendors/jquery-3.6.0.min.js"></script>
 <script src="/adminpublic/adminlogin/js/vendors/bootstrap.bundle.min.js"></script>
 <script src="/adminpublic/adminlogin/js/vendors/jquery.fullscreen.min.js"></script>
 <!-- Main Script -->
 <script src="/adminpublic/adminlogin/js/main.js?v=1.1" type="text/javascript"></script>
+
 </body>
 </html>

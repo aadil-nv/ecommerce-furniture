@@ -6,7 +6,7 @@
             <div class="row">
                 <div class="col-lg-6">
                     <div class="product-details-img-wrap" data-aos="fade-up" data-aos-delay="200">
-                        <div class="swiper-container product-details-big-img-slider-2 pd-big-img-style">
+                        <div class="swiper-container product-details-big-img-slider-2 pd-big-img-style imf">
                             <div class="swiper-wrapper">
                                 <div class="swiper-slide">
                                     <div class="easyzoom-style">
@@ -83,16 +83,16 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="product-details-small-img-wrap">
+                        <div class="product-details-small-img-wrap  ">
                             <div
                                 class="swiper-container product-details-small-img-slider-2 pd-small-img-style pd-small-img-style-modify">
                                 <div class="swiper-wrapper">
                                     <div class="swiper-slide">
-                                        <div class="product-details-small-img">
+                                        <div class="product-details-small-img ">
                                             <img src="/uploads/<%= savedData.productimage[1] %>" alt="Product Thumnail">
                                         </div>
                                     </div>
-                                    <div class="swiper-slide">
+                                    <div class="swiper-slide imf">
                                         <div class="product-details-small-img">
                                             <img src="/uploads/<%= savedData.productimage[2] %>" alt="Product Thumnail">
                                         </div>
@@ -126,8 +126,8 @@
                             <%= savedData.productname %>
                         </h2>
                         <div class="product-details-price">
-                            <span class="old-price">$25.89 </span>
-                            <span class="new-price">
+                            <span class="old-price">₹20,000 </span>
+                            <span class="new-price">₹
                                 <%= savedData.productprice %>
                             </span>
                         </div>
@@ -139,7 +139,7 @@
                                 <i class=" ti-star"></i>
                                 <i class=" ti-star"></i>
                             </div>
-                            <span>( 1 Customer Review )</span>
+                            <span>(10 Customer Review)</span>
                         </div>
                         <div class="product-color product-color-active product-details-color">
                             <span>Color :</span>
@@ -154,7 +154,7 @@
                                 <input class="cart-plus-minus-box input-text qty text" name="qtybutton" value="1">
                             </div>
                             <div class="single-product-cart btn-hover">
-                                <a href="#">Add to cart</a>
+                                <a href="#">Buy Now</a>
                             </div>
                             <div class="single-product-wishlist">
                                 <a title="Wishlist" href="wishlist.html"><i class="pe-7s-like"></i></a>
@@ -165,7 +165,7 @@
                         </div>
                         <div class="product-details-meta">
                             <ul>
-                                <li><span class="title">SKU:</span> Ch-256xl</li>
+                                <li><span class="title">Stock:</span> Available</li>
                                 <li><span class="title">Category:</span>
                                     <ul>
                                         <li><a href="#">
@@ -469,4 +469,61 @@
             </div>
         </div>
     </div>
+    <style>
+        body::-webkit-scrollbar {
+            width: 0;
+        }
+    
+        .product-gallery-item:before {
+            opacity: 0;
+            visibility: hidden !important;
+            border: 0.1rem solid #c96;
+        }
+    
+        .imf {
+            overflow: hidden;
+        }
+    
+        .imf img {
+    
+            transform: scale(var(--zoom, 1));
+            object-fit: cover;
+            transform-origin: var(--x) var(--y);
+            transition: cubic-bezier(0.18, 0.9, 0.33, 1.01) 1s;
+            /* opacity: 0.3; */
+        }
+    
+        .imf:hover {
+            --zoom: 2.5;
+            cursor: crosshair;
+    
+    
+    
+        }
+    </style>
+    <script>
+
+        const elem = document.querySelector('.imf');
+    
+        let x, y, height, width;
+        elem.onmouseenter = () => {
+            const size = elem.getBoundingClientRect();
+            x = size.x;
+            y = size.y;
+            width = size.width;
+            height = size.height;
+    
+        }
+        elem.onmousemove = e => {
+            const horizontel = (e.clientX - x) / width * 100;
+            const vertical = (e.clientY - y) / height * 100;
+            console.log(vertical);
+    
+            elem.style.setProperty('--x', horizontel + '%')
+            elem.style.setProperty('--y', vertical + '%')
+            console.log(elem);
+        }
+    
+    
+    </script>
     <%- include('../partials/mainfooter.ejs')%>

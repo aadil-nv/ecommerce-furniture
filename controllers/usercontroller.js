@@ -40,6 +40,8 @@ const loadRegister = async (req, res) => {
 
 const home = async (req, res) => {
   try {
+
+    console.log("i am lhome");
     const ProductData = await Products.find();
     res.render("user/index", { ProductData });
   } catch (erorr) {
@@ -209,7 +211,7 @@ const userLogin = async (req, res) => {
 
       if (passwordMatch && !block) {
         req.session.user = userData._id;
-        res.render("user/index", { ProductData, User: req.session.user});
+        res.redirect("/");
       } else if (block) {
         res.render("user/login", { message: "Your Account has been blocked" });
       } else {
@@ -231,15 +233,34 @@ const loadUserProfile = async (req, res) => {
   try {
     if (User) {
       res.render("user/userprofile");
-    } else {
-      req.session.destroy();
-      res.render("user/login");
     }
+    //  else {
+    //   // req.session.destroy();
+    //   res.render("user/login");
+    // }
   } catch (error) {
     console.log(error.message);
   }
 };
 // ------------------------------End Loading UserProfile------------------------------------
+
+const logout = async (req, res) => {
+  try {
+   req.session.destroy((err)=>{
+    if(err)
+    {cosole.log("session is not destroyed")}
+    else
+    { res.redirect('/')}
+   })
+  } catch (error) {
+    console.log(error.message);
+  }
+};
+
+
+
+
+
 
 // -----------------Resending the OTP-------------------------------
 
@@ -348,11 +369,13 @@ module.exports = {
   loadLogin,
   userLogin,
   loadUserProfile,
+  logout,
   resendOtp,
   home,
   backToUserHome,
   loadShopPage,
   loadAboutPage,
+  loadContactPage,
   loadProductTab,
   loadGoogleAuth
 };

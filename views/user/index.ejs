@@ -159,16 +159,19 @@
                         <h2>New Added Products</h2>
                     </div>
                 </div>
-                <div class="tab-content jump">
+                <div class="tab-content jump ">
                     <div id="pro-1" class="tab-pane active">
                         <div class="row">
                             <%  ProductData.forEach(data=>{%>
-                            <div class="col-lg-3 col-md-4 col-sm-6 col-12">
+                            <div class="col-lg-3 col-md-4 col-sm-6 col-12 ">
                                 <div class="product-wrap mb-35" data-aos="fade-up" data-aos-delay="200">
                                     <div class="product-img img-zoom mb-25">
                                         <a href="/producttab/<%= data._id %>"">
                                             <img src="/uploads/<%= data.productimage[0] %>" alt="">
                                         </a>
+                                        <div class="product-badge badge-top badge-right badge-success">
+                                            <span>-20%</span>
+                                        </div>
                                         
                                         <div class="product-action-wrap">
                                             <button class="product-action-btn-1" title="Wishlist"><i class="pe-7s-like"></i></button>
@@ -185,7 +188,7 @@
                                         <h3><a href="/producttab?id=<%= data._id %>"><%= data.productname %></a></h3>
                                         <div class="product-price">
                                            
-                                            <span class="new-price"> <%= data.productprice %> </span>
+                                            <span class="new-price">₹.<%= data.productprice %> /-</span>
                                         </div>
                                     </div>
                                 </div>
@@ -517,5 +520,9 @@
                 </div>
             </div>
         </div>
+        
       
         <%- include('../partials/mainfooter.ejs')%>
+
+
+        

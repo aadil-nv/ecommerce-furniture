@@ -1,5 +1,5 @@
 const express = require("express");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const app = express();
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
@@ -252,7 +252,7 @@ const editProductDetiles = async (req, res) => {
 
 const updateProductsFetch = async (req, res) => {
   try {
-    // Extract product ID from request parameters
+
     const productId = req.params.id;
     const { name, des, price, quandity, category, photos } = req.body;
     const product = await Products.findById(productId);
@@ -260,7 +260,6 @@ const updateProductsFetch = async (req, res) => {
 
     const productData = {};
 
-    // Check if product name, description, price, quantity, and category are provided in the request body
     if (req.body.name) {
       await Products.findByIdAndUpdate(
         { _id: productId },
@@ -291,7 +290,7 @@ const updateProductsFetch = async (req, res) => {
         { productcategory: req.body.category }
       );
     }
-    console.log(imageCount);
+    
 
     const MAX_IMAGES = 4;
     const remainingImages = MAX_IMAGES - imageCount;
@@ -436,22 +435,19 @@ const listProduct = async (req, res) => {
 
 const deleteProductImage = async (req, res) => {
   try {
-    const productId = mongoose.Types.ObjectId.createFromHexString(req.params.id);
-    const { name } = req.query;
-    console.log(productId);
-    console.log(name);
-
-    const result = await Products.findByIdAndUpdate(
-      productId,
-      { $pull: { productimage: name } },
-
+    const productId = mongoose.Types.ObjectId.createFromHexString(
+      req.params.id
     );
-    res.redirect(`/editproductdetiles/${productId}`)
+    const { name } = req.query;
+
+    const result = await Products.findByIdAndUpdate(productId, {
+      $pull: { productimage: name },
+    });
+    res.redirect(`/editproductdetiles/${productId}`);
   } catch (error) {
     console.log(error.message);
   }
 };
-
 
 // --------------------------Ending Deleting Image in edit Product detiles  ------------------------------
 
